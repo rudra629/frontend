@@ -26,14 +26,14 @@ const Services = () => {
       description: "Make your dream wedding a reality. Our dedicated team of planners will orchestrate every detail, ensuring your special day is flawless and unforgettable in our grand venues.",
       features: ["Grand Ballroom", "Dedicated Planners", "Custom Catering", "Photography Services"]
     },
-    {
-      id: 4,
-      title: "Corporate Events",
-      icon: Music,
-      image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=2612&auto=format&fit=crop",
-      description: "Host productive and inspiring events. Our state-of-the-art conference facilities are equipped with the latest technology, perfect for board meetings, seminars, and networking events.",
-      features: ["Smart Tech Rooms", "High-speed Wi-Fi", "Event Coordinators", "Business Center"]
-    }
+    // {
+    //   id: 4,
+    //   title: "Corporate Events",
+    //   icon: Music,
+    //   image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=2612&auto=format&fit=crop",
+    //   description: "Host productive and inspiring events. Our state-of-the-art conference facilities are equipped with the latest technology, perfect for board meetings, seminars, and networking events.",
+    //   features: ["Smart Tech Rooms", "High-speed Wi-Fi", "Event Coordinators", "Business Center"]
+    // }
   ];
 
   return (

@@ -9,6 +9,8 @@ import Booking from './pages/Booking';
 import Services from './pages/Services';
 import Offers from './pages/Offers';
 import Contact from './pages/Contact';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 
 // Admin Pages
 import AdminLayout from './admin/AdminLayout';
@@ -19,7 +21,7 @@ import AdminUsers from './admin/Users';
 import AdminLogin from './admin/Login';
 
 const PublicLayout = () => (
-  <div className="flex min-h-screen flex-col">
+  <div className="flex min-h-screen flex-col pt-24">
     <Navbar />
     <main className="flex-1">
       <Outlet />
@@ -49,6 +51,8 @@ function App() {
           <Route path="services" element={<Services />} />
           <Route path="offers" element={<Offers />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<Signup />} />
         </Route>
       </Routes>
     </Router>

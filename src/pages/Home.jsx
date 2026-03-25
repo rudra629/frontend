@@ -1,7 +1,39 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight, Star, CheckCircle2, Quote } from 'lucide-react';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowRight, Star, CheckCircle2, Quote, Calendar, Users } from 'lucide-react';
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  // 1. State to hold the search criteria
+  const [searchData, setSearchData] = useState({
+    checkIn: '',
+    checkOut: '',
+    guests: '1'
+  });
+
+  // 2. Function to handle the "Check Availability" click
+  const handleCheckAvailability = (e) => {
+    e.preventDefault();
+    if (!searchData.checkIn || !searchData.checkOut) {
+      alert("Please select your check-in and check-out dates first.");
+      return;
+    }
+
+    // This redirects the user to /booking and attaches the dates to the URL
+    const queryParams = new URLSearchParams({
+      checkIn: searchData.checkIn,
+      checkOut: searchData.checkOut,
+      adults: searchData.guests
+    }).toString();
+
+    navigate(`/booking?${queryParams}`);
+  };
+
+  const handleChange = (e) => {
+    setSearchData({ ...searchData, [e.target.name]: e.target.value });
+  };
+
   return (
     <div className="w-full">
       {/* Hero Section */}
@@ -39,27 +71,53 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Booking Form Widget */}
+      {/* Booking Form Widget - NOW FUNCTIONAL */}
       <section className="relative z-30 -mt-16 max-w-5xl mx-auto px-4">
         <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 flex flex-col md:flex-row gap-4 items-end backdrop-blur-xl bg-white/95 border border-gray-100">
           <div className="flex-1 w-full">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Check In</label>
-            <input type="date" className="w-full border-gray-300 rounded-xl p-3 border focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" />
+            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+              <Calendar className="w-4 h-4 mr-2 text-primary" /> Check In
+            </label>
+            <input 
+              type="date" 
+              name="checkIn"
+              value={searchData.checkIn}
+              onChange={handleChange}
+              className="w-full border-gray-300 rounded-xl p-3 border focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" 
+            />
           </div>
           <div className="flex-1 w-full">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Check Out</label>
-            <input type="date" className="w-full border-gray-300 rounded-xl p-3 border focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" />
+            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+              <Calendar className="w-4 h-4 mr-2 text-primary" /> Check Out
+            </label>
+            <input 
+              type="date" 
+              name="checkOut"
+              value={searchData.checkOut}
+              onChange={handleChange}
+              className="w-full border-gray-300 rounded-xl p-3 border focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" 
+            />
           </div>
           <div className="flex-1 w-full">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Guests</label>
-            <select className="w-full border-gray-300 rounded-xl p-3 border focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all bg-white">
-              <option>1 Adult</option>
-              <option>2 Adults</option>
-              <option>2 Adults, 1 Child</option>
-              <option>2 Adults, 2 Children</option>
+            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+              <Users className="w-4 h-4 mr-2 text-primary" /> Guests
+            </label>
+            <select 
+              name="guests"
+              value={searchData.guests}
+              onChange={handleChange}
+              className="w-full border-gray-300 rounded-xl p-3 border focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all bg-white"
+            >
+              <option value="1">1 Adult</option>
+              <option value="2">2 Adults</option>
+              <option value="3">3 Adults</option>
+              <option value="4">4 Adults</option>
             </select>
           </div>
-          <button className="w-full md:w-auto bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition-all transform hover:-translate-y-0.5 shadow-lg h-[50px]">
+          <button 
+            onClick={handleCheckAvailability}
+            className="w-full md:w-auto bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition-all transform hover:-translate-y-0.5 shadow-lg h-[50px]"
+          >
             Check Availability
           </button>
         </div>
@@ -225,15 +283,13 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Image Gallery Showcase */}
+      {/* Gallery & Other Sections remain the same */}
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="text-primary font-semibold tracking-wider uppercase mb-2 block">Moments to Remember</span>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Explore Our World</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">Get a glimpse of the luxurious atmosphere that defines the Luxe experience, from glowing evenings to serene mornings.</p>
           </div>
-
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <img src="https://images.unsplash.com/photo-1541971875076-8f970d573be6?q=80&w=2574&auto=format&fit=crop" alt="Gallery 1" className="rounded-2xl h-64 w-full object-cover md:col-span-2 md:row-span-2 md:h-full hover:opacity-90 transition-opacity cursor-pointer" />
             <img src="https://images.unsplash.com/photo-1551882547-ff40eb0d1b73?q=80&w=2674&auto=format&fit=crop" alt="Gallery 2" className="rounded-2xl h-64 w-full object-cover hover:opacity-90 transition-opacity cursor-pointer" />
@@ -243,12 +299,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Special Offers Section */}
       <section className="py-24 bg-gray-900 text-white relative overflow-hidden">
-        {/* Background decorative patterns */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2"></div>
-
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col md:flex-row gap-16 items-center">
             <div className="flex-1 w-full relative">
@@ -261,34 +312,10 @@ const Home = () => {
             </div>
             <div className="flex-1 space-y-6">
               <span className="inline-block px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-primary font-semibold tracking-wider uppercase text-sm border border-white/10">Special Offer</span>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                Weekend Spa <br/> Getaway
-              </h2>
-              <p className="text-lg text-gray-300 leading-relaxed">
-                Escape the daily grind with our exclusive weekend package. Enjoy a 2-night stay in a Deluxe Room with daily breakfast, a 60-minute signature massage for two, and late checkout.
-              </p>
-              <ul className="space-y-4 pt-4">
-                <li className="flex items-center text-white">
-                  <div className="bg-primary/20 p-1 rounded-full mr-4">
-                    <CheckCircle2 className="w-5 h-5 text-primary" />
-                  </div>
-                  2 Nights in Deluxe Room
-                </li>
-                <li className="flex items-center text-white">
-                  <div className="bg-primary/20 p-1 rounded-full mr-4">
-                    <CheckCircle2 className="w-5 h-5 text-primary" />
-                  </div>
-                  Complimentary Breakfast
-                </li>
-                <li className="flex items-center text-white">
-                  <div className="bg-primary/20 p-1 rounded-full mr-4">
-                    <CheckCircle2 className="w-5 h-5 text-primary" />
-                  </div>
-                  60-min Couples Massage
-                </li>
-              </ul>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">Weekend Spa <br/> Getaway</h2>
+              <p className="text-lg text-gray-300">Escape the daily grind with our exclusive weekend package including 2 nights and massage.</p>
               <div className="pt-8">
-                <Link to="/offers" className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-full font-bold flex justify-center w-full sm:w-auto sm:inline-flex items-center transition-all transform hover:-translate-y-1 shadow-lg text-[15px] sm:text-base">
+                <Link to="/offers" className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-full font-bold flex justify-center w-full sm:w-auto sm:inline-flex items-center transition-all shadow-lg">
                   Claim Your Offer
                 </Link>
               </div>
@@ -297,30 +324,22 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Guest Experiences</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">Don't just take our word for it, hear what our guests have to say about their magnificent stay.</p>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { text: "Absolutely phenomenal experience. The attention to detail in the rooms and the world-class dining facilities left me completely amazed. Celebrating our anniversary here was the best decision.", author: "Priya Desai", role: "Travel Blogger" },
-              { text: "We hosted our corporate retreat here and the event flow was seamless. The staff accommodated every single request with a smile. The conference facilities are state-of-the-art.", author: "Rohan Sharma", role: "Director, TechFlow India" },
-              { text: "My family and I spent our Diwali vacation here. The hospitality is unmatched, the spa package was heavenly, and the food was authentic and delicious.", author: "Arjun Kapoor", role: "Verified Guest" }
+              { text: "Absolutely phenomenal experience. The attention to detail left me amazed.", author: "Priya Desai", role: "Travel Blogger" },
+              { text: "The conference facilities are state-of-the-art and staff are great.", author: "Rohan Sharma", role: "Director, TechFlow India" },
+              { text: "The hospitality is unmatched, the spa package was heavenly.", author: "Arjun Kapoor", role: "Verified Guest" }
             ].map((review, i) => (
               <div key={i} className="bg-gray-50 p-8 rounded-3xl relative">
                 <Quote className="w-12 h-12 text-primary/20 absolute top-8 right-8" />
-                <div className="flex text-yellow-500 mb-6">
-                  {[1,2,3,4,5].map(s => <Star key={s} className="w-5 h-5 fill-current" />)}
-                </div>
                 <p className="text-gray-700 leading-relaxed mb-8 italic">"{review.text}"</p>
                 <div className="flex items-center">
-                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center font-bold text-primary mr-4">
-                    {review.author.charAt(0)}
-                  </div>
+                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center font-bold text-primary mr-4">{review.author.charAt(0)}</div>
                   <div>
                     <h4 className="font-bold text-gray-900">{review.author}</h4>
                     <p className="text-sm text-gray-500">{review.role}</p>

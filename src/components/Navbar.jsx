@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Hotel, UserCircle, Plus, LogOut } from 'lucide-react';
+import { Menu, X, Hotel, UserCircle, LogOut, Calendar } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
@@ -13,7 +13,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'Rooms', path: '/rooms' },
+    { name: 'Hotels', path: '/rooms' },
     { name: 'Services', path: '/services' },
     { name: 'Offers', path: '/offers' },
     { name: 'Contact', path: '/contact' },
@@ -93,13 +93,16 @@ const Navbar = () => {
                   {/* Dropdown Menu */}
                   {isProfileOpen && (
                     <div className="absolute top-12 right-32 w-48 bg-white rounded-xl shadow-xl py-2 border border-gray-100 flex flex-col overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-                      {/* <Link 
-                        to="/add-listing" 
+                      
+                      {/* NEW: My Bookings Link */}
+                      <Link 
+                        to="/my-bookings" 
                         className="px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary flex items-center transition-colors"
                       >
-                        <Plus className="w-4 h-4 mr-3" />
-                        Add Listing
-                      </Link> */}
+                        <Calendar className="w-4 h-4 mr-3" />
+                        My Bookings
+                      </Link>
+
                       <div className="h-px bg-gray-100 my-1"></div>
                       <button 
                         onClick={handleLogout}
@@ -171,13 +174,15 @@ const Navbar = () => {
           <div className="flex flex-col space-y-3 pt-4 mt-2 border-t border-gray-100">
             {isAuthenticated ? (
               <>
+                {/* NEW: My Bookings Link (Mobile) */}
                 <Link
-                  to="/add-listing"
+                  to="/my-bookings"
                   className="text-gray-700 font-medium px-4 py-2 flex items-center hover:text-primary"
                 >
-                  <Plus className="w-5 h-5 mr-2" />
-                  Add Listing
+                  <Calendar className="w-5 h-5 mr-2" />
+                  My Bookings
                 </Link>
+
                 <button
                   onClick={handleLogout}
                   className="text-red-600 font-medium px-4 py-2 flex items-center text-left hover:bg-red-50 rounded-lg"

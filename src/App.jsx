@@ -4,8 +4,10 @@ import Footer from './components/Footer';
 
 // Pages
 import Home from './pages/Home';
-import Rooms from './pages/Rooms';
+import Rooms from './pages/Rooms'; // This is currently acting as your Hotels list
+import HotelRooms from './pages/HotelRooms'; 
 import Booking from './pages/Booking';
+import MyBookings from './pages/MyBookings'; // <-- NEW: Imported the My Bookings page
 import Services from './pages/Services';
 import Offers from './pages/Offers';
 import Contact from './pages/Contact';
@@ -47,7 +49,12 @@ function App() {
         <Route path="/" element={<PublicLayout />}>
           <Route index element={<Home />} />
           <Route path="rooms" element={<Rooms />} />
+          <Route path="hotels/:id" element={<HotelRooms />} /> 
           <Route path="booking" element={<Booking />} />
+          
+          {/* NEW: Added the route for users to see their past bookings */}
+          <Route path="my-bookings" element={<MyBookings />} /> 
+          
           <Route path="services" element={<Services />} />
           <Route path="offers" element={<Offers />} />
           <Route path="contact" element={<Contact />} />

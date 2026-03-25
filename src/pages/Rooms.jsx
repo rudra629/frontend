@@ -1,177 +1,136 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, ArrowRight, User, Maximize, Wifi, Coffee } from 'lucide-react';
+import { Star, MapPin, Building } from 'lucide-react';
 
-const Rooms = () => {
-  const [filter, setFilter] = useState('All');
+const Hotels = () => {
+  // 1. State to hold our backend data
+  const [hotels, setHotels] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const rooms = [
-    {
-      id: 1,
-      name: 'Deluxe Ocean View',
-      type: 'Deluxe',
-      price: 18000,
-      rating: 4.9,
-      size: '45 sqm',
-      capacity: '2 Adults',
-      image: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=2670&auto=format&fit=crop',
-      description: 'Spacious luxury room with breathtaking panoramic views of the ocean, premium bedding, and a private balcony.',
-      amenities: ['Free WiFi', 'Breakfast Included', 'Ocean View', 'Mini Bar']
-    },
-    {
-      id: 2,
-      name: 'Executive Suite',
-      type: 'Suite',
-      price: 35000,
-      rating: 5.0,
-      size: '85 sqm',
-      capacity: '3 Adults',
-      image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=2670&auto=format&fit=crop',
-      description: 'Our signature suite featuring a separate living area, marble bathroom with a deep soaking tub, and VIP access.',
-      amenities: ['Lounge Access', 'Butler Service', 'City View', 'Spa Access']
-    },
-    {
-      id: 3,
-      name: 'Premium City View',
-      type: 'Premium',
-      price: 12000,
-      rating: 4.8,
-      size: '40 sqm',
-      capacity: '2 Adults',
-      image: 'https://images.unsplash.com/photo-1631049307264-da0ec4d701c4?q=80&w=2670&auto=format&fit=crop',
-      description: 'Modern design meets comfort in this stylish room offering stunning views of the vibrant city skyline.',
-      amenities: ['Free WiFi', 'City View', 'Smart TV', 'Room Service']
-    },
-    {
-      id: 4,
-      name: 'Family Connecting Room',
-      type: 'Family',
-      price: 25000,
-      rating: 4.7,
-      size: '75 sqm',
-      capacity: '4 Adults',
-      image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?q=80&w=2574&auto=format&fit=crop',
-      description: 'Perfect for families, our connecting rooms offer the perfect balance of togetherness and privacy.',
-      amenities: ['Child Friendly', 'Pool View', 'Game Console', 'Kitchenette']
-    },
-    {
-      id: 5,
-      name: 'Presidential Penthouse',
-      type: 'Suite',
-      price: 85000,
-      rating: 5.0,
-      size: '200 sqm',
-      capacity: '4 Adults',
-      image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=2574&auto=format&fit=crop',
-      description: 'The pinnacle of luxury. Taking over the entire top floor with a private pool, grand piano, and dedicated staff.',
-      amenities: ['Private Pool', 'Chef', 'Helipad Access', 'Panoramic View']
-    },
-    {
-      id: 6,
-      name: 'Cozy Standard Room',
-      type: 'Standard',
-      price: 8000,
-      rating: 4.5,
-      size: '30 sqm',
-      capacity: '2 Adults',
-      image: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?q=80&w=2670&auto=format&fit=crop',
-      description: 'A comfortable escape featuring our signature luxury bed, work desk, and a beautifully appointed modern bathroom.',
-      amenities: ['Free WiFi', 'Quiet Zone', 'Work Desk', 'Smart TV']
+  // Default fallback image
+  const defaultHotelImage = 'https://images.unsplash.com/photo-1542314831-c6a4d14d8373?q=80&w=2670&auto=format&fit=crop';
+
+  // Helper function to validate the image URL
+  const getImageUrl = (url) => {
+    if (url && url.startsWith('http')) {
+      return url;
     }
-  ];
+    return defaultHotelImage;
+  };
 
-  const filteredRooms = filter === 'All' ? rooms : rooms.filter(room => room.type === filter);
-  const roomTypes = ['All', 'Standard', 'Deluxe', 'Premium', 'Suite', 'Family'];
+  // 2. Fetch data from Django when the component loads
+  useEffect(() => {
+    const fetchHotels = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/hotels/');
+        if (!response.ok) {
+          throw new Error('Failed to fetch hotels');
+        }
+        const data = await response.json();
+        setHotels(data);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error:', err);
+        setError('Could not load hotels. Is the Django server running?');
+        setLoading(false);
+      }
+    };
+
+    fetchHotels();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-24 text-xl font-semibold text-gray-600">
+        Loading luxury destinations...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-24 text-red-500 font-semibold">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <div className="pt-24 pb-16 bg-gray-50 min-h-screen">
       {/* Header */}
       <div className="bg-gray-900 text-white py-16 -mt-24 mb-16 px-4">
         <div className="max-w-7xl mx-auto mt-16 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Our Rooms & Suites</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Our Premier Hotels</h1>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            Discover comfort and elegance in equal measure. Every room is designed to provide you with a peaceful sanctuary in the city.
+            Discover comfort and elegance across our global locations. Select a hotel to explore available rooms and suites.
           </p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Filters */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
-          {roomTypes.map(type => (
-            <button
-              key={type}
-              onClick={() => setFilter(type)}
-              className={`px-6 py-2 rounded-full font-medium transition-all ${
-                filter === type 
-                  ? 'bg-primary text-white shadow-lg' 
-                  : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
-              }`}
-            >
-              {type}
-            </button>
-          ))}
-        </div>
-
-        {/* Room Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredRooms.map(room => (
-            <div key={room.id} className="bg-white rounded-2xl overflow-hidden shadow-lg group flex flex-col hover:shadow-2xl transition-shadow duration-300">
-              <div className="relative h-64 overflow-hidden">
-                <img 
-                  src={room.image} 
-                  alt={room.name} 
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full font-bold text-gray-900 shadow-sm">
-                  ₹{room.price.toLocaleString('en-IN')} <span className="text-sm font-normal text-gray-600">/ night</span>
-                </div>
-              </div>
-              
-              <div className="p-6 flex-1 flex flex-col">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-xl font-bold text-gray-900">{room.name}</h3>
-                  <div className="flex items-center text-yellow-500 bg-yellow-50 px-2 py-1 rounded">
-                    <Star className="w-4 h-4 fill-current" />
-                    <span className="text-sm font-medium ml-1">{room.rating}</span>
+        
+        {/* If no hotels exist yet, show a friendly message */}
+        {hotels.length === 0 ? (
+          <div className="text-center text-gray-500 text-lg py-12">
+            No hotels found. Add some in the Django Admin panel!
+          </div>
+        ) : (
+          /* Hotel Grid */
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {hotels.map(hotel => (
+              <div key={hotel.id} className="bg-white rounded-2xl overflow-hidden shadow-lg group flex flex-col hover:shadow-2xl transition-shadow duration-300">
+                
+                {/* BULLETPROOF IMAGE CONTAINER */}
+                <div className="relative h-64 w-full bg-gray-200 overflow-hidden">
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center transform group-hover:scale-110 transition-transform duration-700"
+                    style={{ 
+                      backgroundImage: `url(${getImageUrl(hotel.image_url)})` 
+                    }}
+                  />
+                  
+                  {/* Badge showing how many rooms are in this hotel */}
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full font-bold text-gray-900 shadow-sm flex items-center gap-2 text-sm z-10">
+                    <Building className="w-4 h-4 text-primary" />
+                    {hotel.rooms?.length || 0} Rooms
                   </div>
                 </div>
                 
-                <div className="flex gap-4 mb-4 text-sm text-gray-500 border-b border-gray-100 pb-4">
-                  <span className="flex items-center"><Maximize className="w-4 h-4 mr-1"/> {room.size}</span>
-                  <span className="flex items-center"><User className="w-4 h-4 mr-1"/> {room.capacity}</span>
-                </div>
-
-                <p className="text-gray-600 mb-6 flex-1 text-sm line-clamp-3 leading-relaxed">
-                  {room.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {room.amenities.slice(0, 3).map((amenity, index) => (
-                    <span key={index} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-md font-medium">
-                      {amenity}
+                <div className="p-6 flex-1 flex flex-col">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-xl font-bold text-gray-900 line-clamp-1">{hotel.name}</h3>
+                    <div className="flex items-center text-yellow-500 bg-yellow-50 px-2 py-1 rounded min-w-max ml-2">
+                      <Star className="w-4 h-4 fill-current" />
+                      <span className="text-sm font-medium ml-1">{hotel.star_rating}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-4 mb-4 text-sm text-gray-500 border-b border-gray-100 pb-4">
+                    <span className="flex items-center text-gray-600">
+                      <MapPin className="w-4 h-4 mr-1 text-primary"/> 
+                      {hotel.location}
                     </span>
-                  ))}
-                  {room.amenities.length > 3 && (
-                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-md font-medium">
-                      +{room.amenities.length - 3} more
-                    </span>
-                  )}
-                </div>
+                  </div>
 
-                <Link 
-                  to="/booking" 
-                  className="w-full block text-center bg-gray-50 hover:bg-primary hover:text-white text-primary px-4 py-3 border border-primary/20 hover:border-primary rounded-xl font-semibold transition-all"
-                >
-                  Book Now
-                </Link>
+                  <p className="text-gray-600 mb-6 flex-1 text-sm line-clamp-3 leading-relaxed">
+                    {hotel.description}
+                  </p>
+
+                  <Link 
+                    to={`/hotels/${hotel.id}`}
+                    className="w-full block text-center bg-gray-50 hover:bg-primary hover:text-white text-primary px-4 py-3 border border-primary/20 hover:border-primary rounded-xl font-semibold transition-all"
+                  >
+                    View Rooms
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default Rooms;
+export default Hotels;

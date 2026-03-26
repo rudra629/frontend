@@ -136,7 +136,7 @@ const Home = () => {
                   className="rounded-3xl object-cover h-64 w-full shadow-lg transform translate-y-8"
                 />
                 <img 
-                  src="https://images.unsplash.com/photo-1584132967334-10e028b17a10?q=80&w=2670&auto=format&fit=crop" 
+                  src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=2670&auto=format&fit=crop" 
                   alt="Hotel Pool" 
                   className="rounded-3xl object-cover h-80 w-full shadow-xl"
                 />
